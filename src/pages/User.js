@@ -16,9 +16,16 @@ const User = () => {
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
+        var date = new Date(data.dob);
+        data.dob = date;
+
         setStudent(data); //setStudents(data)
       });
   }, []);
+
+  const getDateFormat = () => {
+    return student.dob.toLocaleDateString();
+  };
 
   return (
     <>
@@ -57,6 +64,16 @@ const User = () => {
                         </td>
                         <td class="text-primary">{student.email}</td>
                       </tr>
+
+                      <tr>
+                        <td>
+                          <strong>Date of Birth</strong>
+                        </td>
+                        <td class="text-primary">
+                          {() => getDateFormat(student.dob)}
+                        </td>
+                      </tr>
+
                       <tr>
                         <td>
                           <strong>Picture</strong>
