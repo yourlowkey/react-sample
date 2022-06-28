@@ -74,8 +74,14 @@ const UserEdit = () => {
   };
 
   const saveUser = () => {
+    let myMethod;
+    if (params.id == 'new') {
+      myMethod = 'POST';
+    } else {
+      myMethod = 'PUT';
+    }
     const requestOptions = {
-      method: 'PUT',
+      method: myMethod,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(student),
     };
@@ -116,6 +122,9 @@ const UserEdit = () => {
                       <tr>
                         <td>
                           <strong>Your Identificacion</strong>
+                          <Link to="/useredit/new">
+                            <button>Add new</button>
+                          </Link>
                         </td>
                         <td class="text-primary">{student.id}</td>
                       </tr>
