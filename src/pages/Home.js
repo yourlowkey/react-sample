@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 import StudentTable from '../components/StudentTable';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -45,8 +45,14 @@ function App() {
   */
   return (
     <div className="container">
-      <Link to="/useredit/new">
-        <button>Add new</button>
+      <Link to={'/useredit/new'}>
+        <button
+          className="btn btn-primary"
+          type="button"
+          // onClick={searchStudent}
+        >
+          Add New
+        </button>
       </Link>
       <h2>Danh sách sinh viên</h2>
       <div class="row">

@@ -10,22 +10,34 @@ const UserEdit = () => {
   const [student, setStudent] = useState(null);
   const [countries, setCountries] = useState(null);
   let navigate = useNavigate();
+
   useEffect(() => {
     console.log('user use effect!!');
+    if (params.id != 'new') {
+      let student_url =
+        'https://60efed10f587af00179d3b82.mockapi.io/api/students/' + params.id;
 
-    let student_url =
-      'https://60efed10f587af00179d3b82.mockapi.io/api/students/' + params.id;
+      console.log(student_url);
+      fetch(student_url)
+        .then((response) => response.json())
+        .then((data) => {
+          //change date
+          var date = new Date(data.dob);
+          data.dob = date.toISOString().slice(0, 10);
+          console.log(data.dob);
+          setStudent(data);
+        });
+    } else {
+      let initData = {};
+      //initData.firstName="";
+      //initData.lastName="";
 
-    console.log(student_url);
-    fetch(student_url)
-      .then((response) => response.json())
-      .then((data) => {
-        //change date
-        var date = new Date(data.dob);
-        data.dob = date.toISOString().slice(0, 10);
-        console.log(data.dob);
-        setStudent(data);
-      });
+      initData.home = {};
+      //initData.home.address="";
+      //initData.home.city="";
+      //initData.home.country="";
+      setStudent(initData);
+    }
 
     let country_url =
       'https://60efed10f587af00179d3b82.mockapi.io/api/countries/';
@@ -74,11 +86,11 @@ const UserEdit = () => {
   };
 
   const saveUser = () => {
-    let myMethod;
-    if (params.id == 'new') {
-      myMethod = 'POST';
-    } else {
-      myMethod = 'PUT';
+    let myMethod = 'POST';
+    let id = '';
+    if (student.id) {
+      method = 'PUT';
+      id = student.id;
     }
     const requestOptions = {
       method: myMethod,
@@ -86,7 +98,7 @@ const UserEdit = () => {
       body: JSON.stringify(student),
     };
     fetch(
-      'https://60efed10f587af00179d3b82.mockapi.io/api/students/' + student.id,
+      'https://60efed10f587af00179d3b82.mockapi.io/api/students/' + id,
       requestOptions
     )
       .then((response) => response.json())
@@ -114,7 +126,9 @@ const UserEdit = () => {
           <div class="panel-body inf-content">
             <div class="row">
               <div class="col-md-6">
-                <strong>EDIT Your Information</strong>
+                <strong>
+                  {student.id ? 'Edit' : 'Add'}EDIT Your Information
+                </strong>
                 <br />
                 <div class="table-responsive">
                   <table class="table table-user-information">
@@ -122,9 +136,8 @@ const UserEdit = () => {
                       <tr>
                         <td>
                           <strong>Your Identificacion</strong>
-                          <Link to="/useredit/new">
-                            <button>Add new</button>
-                          </Link>
+
+                          <button href="/useredit/new">Add new</button>
                         </td>
                         <td class="text-primary">{student.id}</td>
                       </tr>
