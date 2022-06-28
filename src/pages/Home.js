@@ -45,6 +45,9 @@ function App() {
   */
   return (
     <div className="container">
+      <Link to="/useredit/new">
+        <button>Add new</button>
+      </Link>
       <h2>Danh sách sinh viên</h2>
       <div class="row">
         <div class="col-sm-6">
