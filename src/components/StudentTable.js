@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 function StudentTable(props) {
   const [students, setStudents] = useState(null);
   const [direction, setDirection] = useState(1);
+
   useEffect(() => {
     console.log('student table useEffect!!');
     setStudents(props.data);
@@ -24,6 +25,19 @@ function StudentTable(props) {
     setStudents(sortData);
   };
 
+  const deleteUser = (id) => {
+    fetch('https://60efed10f587af00179d3b82.mockapi.io/api/students/' + id, {
+      method: 'DELETE',
+    }).then(() => {
+      console.log('delete successful!!');
+      let result = [...students];
+      result = result.filter((item) => {
+        return item.id != id;
+      });
+      setStudents(result);
+    });
+  };
+
   console.log('student table main');
   var student_list = [];
   if (students != null) {
@@ -32,20 +46,34 @@ function StudentTable(props) {
       <tr
         key={item.id}
         className={
-          item.mark >= 9
+          item.mark >= 70
             ? 'table-success'
-            : item.mark > 4
+            : item.mark > 40
             ? 'table-primary'
             : 'table-danger'
         }
       >
+        <td>{item.id}</td>
         <td>{item.firstName}</td>
         <td>{item.lastName}</td>
         <td>{item.email}</td>
         <td>{item.mark}</td>
         <td>
-          {' '}
-          <Link to="/user/911">Details</Link>
+          <Link to={'/user/' + item.id}>Details</Link>
+        </td>
+        <td>
+          <Link to={'/useredit/' + item.id}>
+            <button type="button" class="btn btn-primary">
+              Edit
+            </button>
+          </Link>
+          <button
+            type="button"
+            class="btn btn-danger"
+            onClick={() => deleteUser(item.id)}
+          >
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          </button>
         </td>
       </tr>
     ));
@@ -54,6 +82,7 @@ function StudentTable(props) {
   return (
     <table className="table">
       <tr>
+        <th>ID</th>
         <th onClick={() => sortColumn('firstName', 'string')}>First Name</th>
 
         <th onClick={() => sortColumn('lastName', 'string')}>
