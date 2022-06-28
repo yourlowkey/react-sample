@@ -8,22 +8,34 @@ import { Link } from 'react-router-dom';
 const UserEdit = () => {
   const params = useParams();
   const [student, setStudent] = useState(null);
+  const [countries, setCountries] = useState(null);
   let navigate = useNavigate();
   useEffect(() => {
     console.log('user use effect!!');
 
-    let url =
+    let student_url =
       'https://60efed10f587af00179d3b82.mockapi.io/api/students/' + params.id;
 
-    console.log(url);
-    fetch(url)
+    console.log(student_url);
+    fetch(student_url)
       .then((response) => response.json())
       .then((data) => {
         //change date
         var date = new Date(data.dob);
         data.dob = date.toISOString().slice(0, 10);
         console.log(data.dob);
-        setStudent(data); //setStudents(data)
+        setStudent(data);
+      });
+
+    let country_url =
+      'https://60efed10f587af00179d3b82.mockapi.io/api/countries/';
+
+    console.log(country_url);
+    fetch(country_url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setCountries(data);
       });
   }, []);
 
@@ -46,15 +58,19 @@ const UserEdit = () => {
     console.log(data);
     setStudent(data);
   };
+
   const handleChangeHome = (event) => {
-    console.log(event);
+    //console.log(event);
     const target = event.target;
     const value = target.value;
     const name = target.name;
-
     console.log(name);
+    console.log(value);
     let data = { ...student };
-    data[name] = value;
+    data.home[name] = value;
+
+    console.log(data);
+    setStudent(data);
   };
 
   const saveUser = () => {
@@ -113,6 +129,7 @@ const UserEdit = () => {
                             type="text"
                             className="form-control"
                             value={student.firstName}
+                            name="firstName"
                             onChange={(e) => handleChange(e)}
                           ></input>
                         </td>
@@ -121,14 +138,30 @@ const UserEdit = () => {
                         <td>
                           <strong>Lastname</strong>
                         </td>
-                        <td class="text-primary">{student.lastName}</td>
+                        <td>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={student.lastName}
+                            name="lastName"
+                            onChange={(e) => handleChange(e)}
+                          ></input>
+                        </td>
                       </tr>
 
                       <tr>
                         <td>
                           <strong>Email</strong>
                         </td>
-                        <td class="text-primary">{student.email}</td>
+                        <td>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={student.email}
+                            name="email"
+                            onChange={(e) => handleChange(e)}
+                          ></input>
+                        </td>
                       </tr>
 
                       <tr>
@@ -136,11 +169,29 @@ const UserEdit = () => {
                           <strong>Home address</strong>
                         </td>
                         <td class="text-primary">
-                          {student.home.address}
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={student.home.address}
+                            name="address"
+                            onChange={(e) => handleChangeHome(e)}
+                          ></input>
                           <p />
-                          {student.home.city}
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={student.home.city}
+                            name="city"
+                            onChange={(e) => handleChangeHome(e)}
+                          ></input>
                           <p />
-                          {student.home.country}
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={student.home.country}
+                            name="country"
+                            onChange={(e) => handleChangeHome(e)}
+                          ></input>
                         </td>
                       </tr>
 
@@ -209,6 +260,32 @@ const UserEdit = () => {
                               }}
                             />
                             Female
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Country</strong>
+                        </td>
+                        <td>
+                          <div className="select-container">
+                            {countries != null ? (
+                              <select
+                                name="country"
+                                value={student.home.country}
+                                onChange={(e) => {
+                                  handleChangeHome(e);
+                                }}
+                              >
+                                {countries.map((item) => (
+                                  <option value={item.country_name}>
+                                    {item.country_name}
+                                  </option>
+                                ))}
+                              </select>
+                            ) : (
+                              ''
+                            )}
                           </div>
                         </td>
                       </tr>
