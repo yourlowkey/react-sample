@@ -89,7 +89,7 @@ const UserEdit = () => {
     let myMethod = 'POST';
     let id = '';
     if (student.id) {
-      method = 'PUT';
+      myMethod = 'PUT';
       id = student.id;
     }
     const requestOptions = {
@@ -103,8 +103,8 @@ const UserEdit = () => {
     )
       .then((response) => response.json())
       .then((data) => {
-        //var date = new Date(data.dob);
-        //data.dob = date.getTime();
+        var date = new Date(data.dob);
+        data.dob = date.getTime();
 
         console.log(data);
         navigate(-1);
